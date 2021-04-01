@@ -8,6 +8,7 @@ import 'package:e2e/e2e.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -52,5 +53,17 @@ void main() {
           },
         ),
         completes);
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      expect(
+        FirebaseAnalytics().logEvent(
+          name: 'test_event',
+          parameters: {
+            'ids': [1, 2, 3, 4, 5],
+          },
+        ),
+        throwsA(isA<PlatformException>()),
+      );
+    }
   });
 }
